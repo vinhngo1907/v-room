@@ -16,12 +16,14 @@ import {
 import { MessagesService } from './messages.service';
 import { MessageWebDto } from '@libs/v-dto';
 import { JwtSocketGuard } from 'src/infrastructure/jwt/guard/jwt-socket.guard';
+import { Server, Socket } from 'socket.io';
+import { AuthSocket } from '@modules/auth/auth.interface';
 
 @WebSocketGateway()
 export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
-    private kafka: Kafka; // Declare kafka as a class property
-    private producer: Producer; // Declare producer as a class property
-    private consumer: Consumer; // Declare consumer as a class property
+    private kafka!: Kafka; // Declare kafka as a class property
+    private producer!: Producer; // Declare producer as a class property
+    private consumer!: Consumer; // Declare consumer as a class property
 
     constructor(
         private readonly messagesService: MessagesService,
@@ -32,7 +34,8 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
 
 
     // web socket
-    @WebSocketServer() server;
+    @WebSocketServer()
+    server!: Server;
 
     // connection to the kafka message broker at the moment of initialization
     async onModuleInit() {
@@ -40,7 +43,7 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
             // Initialize Kafka
             this.kafka = new Kafka({
                 clientId: 'api-gateway',
-                brokers: [this.configService.get<string>('KAFKA_URI')],
+                brokers: [this.configService.get<string>('KAFKA_URI')!],
                 sasl: {
                     mechanism: this.configService.get<string>('KAFKA_MECHANISM'),
                     username: this.configService.get<string>('KAFKA_USER'),
@@ -51,7 +54,7 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
             // Initialize producer and consumer
             this.producer = this.kafka.producer();
             this.consumer = this.kafka.consumer({
-                groupId: this.configService.get<string>('KAFKA_READY_MESSAGE_GROUP'),
+                groupId: this.configService.get<string>('KAFKA_READY_MESSAGE_GROUP')!,
             });
 
             // Connect producer
@@ -60,7 +63,7 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
             // Connect and subscribe consumer
             await this.consumer.connect();
             await this.consumer.subscribe({
-                topic: this.configService.get<string>('KAFKA_READY_MESSAGE_TOPIC'),
+                topic: this.configService.get<string>('KAFKA_READY_MESSAGE_TOPIC')!,
                 fromBeginning: true,
             });
 
@@ -86,7 +89,15 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
 
     receiveReadyMessage(kafkaMessage: KafkaMessage) {
         try {
-            const messageValue: MessageWebDto = JSON.parse(kafkaMessage.value.toString());
+            if (!kafkaMessage.value) {
+                this.logger.warn('Kafka message has no value');
+                return;
+            }
+
+            const messageValue: MessageWebDto = JSON.parse(
+                kafkaMessage.value.toString(),
+            );
+
             this.server.to(messageValue.room_id).emit('message', messageValue);
         } catch (error) {
             this.logger.error(error);
@@ -106,11 +117,11 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
                 user_id: userId,
                 created_at: new Date(),
             };
-            console.log(">>>>>",  this.configService.get<string>('KAFKA_RAW_MESSAGE_TOPIC'))
+            console.log(">>>>>", this.configService.get<string>('KAFKA_RAW_MESSAGE_TOPIC'))
             console.log({ key: room_id, value: JSON.stringify(rawMessage), });
 
             await this.producer.send({
-                topic: this.configService.get<string>('KAFKA_RAW_MESSAGE_TOPIC'),
+                topic: this.configService.get<string>('KAFKA_RAW_MESSAGE_TOPIC')!,
                 messages: [
                     { key: room_id, value: JSON.stringify(rawMessage), },
                 ],
@@ -122,7 +133,8 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
 
     @UseGuards(JwtSocketGuard)
     @SubscribeMessage('joinPrivateRoom')
-    async joinPrivateRoom(@ConnectedSocket() client: any, @MessageBody() data: any) {
+    async joinPrivateRoom(
+        @ConnectedSocket() client: AuthSocket, @MessageBody() data: any) {
         try {
             const { userId: secondId } = data;
             const { id: currentId } = client.handshake.user;
@@ -134,7 +146,7 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
                 ids: [secondId, currentId]
             });
 
-            const roomId = roomData?.room?.id;
+            const roomId = roomData?.room?.id!;
 
             client.join(roomId);
             client.emit('joinPrivateRoom', {
@@ -142,7 +154,7 @@ export class MessagesGateway implements OnModuleInit, OnModuleDestroy {
                 room: roomData?.room,
                 messages: roomData?.messages
             });
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(error);
         }
     }

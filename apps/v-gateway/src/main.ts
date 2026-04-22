@@ -15,11 +15,11 @@ async function bootstrap() {
 
 	app.use(
 		['/swagger'],
-		basicAuth({
+		basicAuth.default({
 			challenge: true,
 			users: {
-				[configService.get<string>('DOC_USER')]:
-					configService.get<string>('DOC_PASS'),
+				[configService.get<string>('DOC_USER')!]:
+					configService.get<string>('DOC_PASS')!,
 			},
 		}),
 	);
@@ -33,14 +33,15 @@ async function bootstrap() {
 		)
 		.build();
 
-	// const document = SwaggerModule.createDocument(app, swaggerConfig);
+	const document = SwaggerModule.createDocument(app, swaggerConfig);
 
-	// SwaggerModule.setup('swagger', app, document, {
-	// 	swaggerOptions: {
-	// 		persistAuthorization: true,
-	// 	},
-	// });
+	SwaggerModule.setup('swagger', app, document, {
+		swaggerOptions: {
+			persistAuthorization: true,
+		},
+	});
 
-	await app.listen(configService.get<string>('APP_PORT'));
+	await app.listen(configService.get<string>('APP_PORT') || 3000);
 }
+
 bootstrap();

@@ -14,6 +14,7 @@ import { registrationJoi, loginJoi } from './auth.joi';
 import { JoiValidationPipe } from 'src/infrastructure/pipes/joi.validation';
 import { WebAccessTokens } from './auth.dto';
 import { RefreshTokenGuard } from 'src/infrastructure/jwt/guard/jwt-refresh.guard';
+import { RequestWithUser } from '@modules/auth/auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -31,7 +32,7 @@ export class AuthController {
     async registration(@Body() body: WebRegistrationParamDto) {
         try {
             return this.authService.registration(body);
-        } catch (error) {
+        } catch (error: any) {
             if (error?.code === 11000) {
                 throw new BadRequestException('Duplicate user', {
                     cause: error,
@@ -64,7 +65,7 @@ export class AuthController {
     @ApiTags('Authorization')
     @ApiOperation({ summary: 'Refresh of JWT token' })
     @ApiBearerAuth('JWT')
-    async refresh(@Request() req): Promise<WebAccessTokens> {
+    async refresh(@Request() req: RequestWithUser): Promise<WebAccessTokens> {
         return this.authService.refresh(req.user);
     }
 }

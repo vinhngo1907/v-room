@@ -1,6 +1,5 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Request, UseGuards, UsePipes } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query, Request, UseGuards, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UsersCreateDto } from './users.dto';
 import {
     ApiBearerAuth,
     ApiOperation,
@@ -11,6 +10,7 @@ import { FindAllDto, FindByIdDto, WebUserDto, WebUsersAllDto } from '@libs/v-dto
 import { JoiValidationPipe } from 'src/infrastructure/pipes/joi.validation';
 import { JwtAuthGuard } from 'src/infrastructure/jwt/guard/jwt-auth.guard';
 import { findAllJoi, findByIdJoi } from './user.joi';
+import { RequestWithUser } from '@modules/auth/auth.interface';
 
 @Controller('users')
 export class UsersController {
@@ -29,7 +29,7 @@ export class UsersController {
     @UsePipes(new JoiValidationPipe(findAllJoi))
     findAll(
         @Query() params: FindAllDto,
-        @Request() req,
+        @Request() req: RequestWithUser,
     ): Promise<WebUsersAllDto> {
         return this.usersService.findAll(params, req.user);
     }

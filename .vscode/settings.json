@@ -1,0 +1,17 @@
+{
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  "editor.formatOnSave": true,
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
+  "eslint.validate": ["typescript"],
+
+  "search.exclude": {
+    "**/dist": true,
+    "**/node_modules": true
+  }
+}
