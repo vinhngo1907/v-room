@@ -2,11 +2,11 @@
 
 Message service provides functionality for messages in application, this service contains all messages and chat rooms. I use Nest.js for backend, Mongo database and Kafka as message broker.
 
-Full code - [link](https://github.com/vinhngo1907/v-cursor)
+Full code - [link](https://github.com/vinhngo1907/v-room)
 
 ### Whole scheme:
 
-![Containers](./docs/v-micro.png)
+![Containers](./docs/img/v-containers.png)
 
 Short description:
 
