@@ -16,6 +16,10 @@
 			"@modules/*": [
 				"src/modules/*"
 			],
-		}
+		},
+		"types": [
+			"node",
+			"jest"
+		]
 	}
 }

@@ -1,8 +1,9 @@
 import { FindByIdDto, WebLoginParamDto, WebRegistrationParamDto, WebUserDto } from "@libs/v-dto";
-import { HttpMethod } from "@modules/users/user.type";
+// import { HttpMethod } from "@modules/users/user.type";
 import { HttpService } from "@nestjs/axios";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { HttpMethod } from "src/types";
 
 @Injectable()
 export class AuthRepo {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { pbkdf2, randomBytes } from 'node:crypto';
 import { promisify } from 'util';
-import { generatedPasswordDto, isMatchPasswordDto } from 'src/dto/index.dto';
+import { generatedPasswordDto, isMatchPasswordDto } from '../../dto/index.dto';
 
 const pbkdf2Promise = promisify(pbkdf2);
 

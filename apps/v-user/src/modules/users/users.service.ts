@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersHelper } from './users.helper';
 import { FindAllDto, FindByIdDto, FindByIdsDto, messageAnalysisDto, userAnalysisDto, userDto, WebLoginParamDto, WebRegistrationParamDto, WebUserDto, WebUsersAllDto } from '@libs/v-dto';
 import { UsersRepoService } from '../users-repo/users-repo.service';
-import { saveAnalysisDto } from 'src/dto/index.dto';
+import { saveAnalysisDto } from '../../dto/index.dto';
 
 @Injectable()
 export class UsersService {
@@ -102,13 +102,25 @@ export class UsersService {
 
     async findAll(param: FindAllDto): Promise<WebUsersAllDto | undefined> {
         const usersList = await this.usersRepoService.findAll(param);
-        usersList.users = usersList.users.map((u: userDto) => {
-            const { id, email, login, active, created_at } = u;
-            return { id, email, login, active, created_at };
-        });
+
+        // usersList.users = usersList.users.map((user: userDto) => {
+        //     const { id, login, email, active, created_at } = user;
+
+        //     return { id, login, email, active, created_at };
+        // });
+
+
+        usersList.users = usersList.users.map((u) => ({
+            id: u.id,
+            email: u.email,
+            login: u.login,
+            active: u.active,
+            created_at: u.created_at,
+        }));
 
         return usersList;
     }
+
 
     async findById(param: FindByIdDto): Promise<WebUserDto | undefined> {
         const user = await this.usersRepoService.findActiveUser(param);
@@ -121,10 +133,17 @@ export class UsersService {
 
     async findByIds(param: FindByIdsDto): Promise<WebUsersAllDto | undefined> {
         const usersList = await this.usersRepoService.findByIds(param);
-        usersList.users = usersList.users.map((u: userDto) => {
-            const { id, email, login, active, created_at } = u;
-            return { id, email, login, active, created_at };
-        });
+        // usersList.users = usersList.users.map((u: userDto) => {
+        //     const { id, email, login, active, created_at } = u;
+        //     return { id, email, login, active, created_at };
+        // });
+        usersList.users = usersList.users.map((u) => ({
+            id: u.id,
+            email: u.email,
+            login: u.login,
+            active: u.active,
+            created_at: u.created_at,
+        }));
 
         return usersList;
     }

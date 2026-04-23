@@ -14,11 +14,11 @@ export class JwtSocketGuard implements CanActivate {
             const data = context.switchToWs().getData();
             const user: any = jwt.verify(
                 data.token || '',
-                this.configService.get<string>('JWT_SECRET'),
+                this.configService.get<string>('JWT_SECRET')!,
             );
             client.handshake.user = user;
             return true;
-        } catch (error) {
+        } catch (error: any) {
             throw new WsException(error.message);
         }
     }

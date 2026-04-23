@@ -9,9 +9,10 @@ import {
     FindByIdDto,
     WebUserDto,
     FindByIdsDto,
-    userListDto,
+    usersListDto,
 } from '@libs/v-dto';
-import { findActiveUserDto, saveAnalysisDto } from 'src/dto/index.dto';
+// import { findActiveUserDto, saveAnalysisDto } from 'src/dto/index.dto';
+import { findActiveUserDto, saveAnalysisDto } from '../../dto/index.dto';
 import { User, UserDocument } from './users-repo.schema';
 
 @Injectable()
@@ -88,7 +89,7 @@ export class UsersRepoService {
         );
     }
 
-    async findAll(param: FindAllDto): Promise<WebUsersAllDto | undefined> {
+    async findAll(param: FindAllDto): Promise<usersListDto> {
         const {
             skip = 0,
             limit = 2,
@@ -97,19 +98,26 @@ export class UsersRepoService {
             excludeIds,
         } = param;
 
-        const sortField = param.sortField === "id" || !param.sortField ? "_id" : param.sortField
-        const users = await this.userModel.find({
-            active: true,
-            ...(login ? { $text: { $search: login } } : {}),
-            ...(excludeIds ? { _id: { $nin: excludeIds } } : {}),
-        }).sort({ [sortField]: sortAsc === "asc" ? 1 : -1 }).skip(skip).limit(limit);
+        const sortField =
+            param.sortField === 'id' || !param.sortField ? '_id' : param.sortField;
+
+        const users = await this.userModel
+            .find({
+                active: true,
+                ...(login ? { $text: { $search: login } } : {}),
+                ...(excludeIds ? { _id: { $nin: excludeIds } } : {}),
+            })
+            .sort({ [sortField]: sortAsc === 'asc' ? 1 : -1 })
+            .skip(skip)
+            .limit(limit);
 
         const count = await this.userModel.count({
-            active: true
+            active: true,
         });
 
         return {
-            users: users.map(u => this.getUserDto(u)), count
+            users: users.map((user) => this.getUserDto(user)),
+            count,
         };
     }
 
@@ -127,7 +135,7 @@ export class UsersRepoService {
         return this.getUserDto(user);
     }
 
-    async findByIds(param: FindByIdsDto): Promise<userListDto> {
+    async findByIds(param: FindByIdsDto): Promise<usersListDto> {
         const users = await this.userModel.find({
             active: true,
             _id: { $in: param.ids }

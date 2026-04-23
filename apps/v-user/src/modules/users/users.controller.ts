@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Get, HttpStatus, Param, Post, Qu
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllDto, FindByIdDto, FindByIdsDto, WebLoginParamDto, WebRegistrationParamDto, WebUserDto, WebUsersAllDto } from '@libs/v-dto';
-import { JoiValidationPipe } from 'src/pipes/joi.validation.pipe';
+import { JoiValidationPipe } from '../../pipes/joi.validation.pipe';
 import { findAllJoi, findByIdJoi, loginJoi, registrationJoi, findByIdsJoi } from './users.joi';
 
 @Controller('users')
@@ -34,7 +34,7 @@ export class UsersController {
     async register(@Body() body: WebRegistrationParamDto): Promise<WebUserDto> {
         try {
             return this.usersService.registration(body);
-        } catch (error) {
+        } catch (error: any) {
             if (error?.code === 11000) {
                 throw new BadRequestException('Duplicate user', {
                     cause: error,

@@ -5,7 +5,8 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { FindByIdsDto, PrivateRoomQueryDto, RoomDataDto, WebUsersAllDto } from '@libs/v-dto';
-import { HttpMethod } from '@modules/messages/message.type';
+import { HttpMethod } from 'src/types';
+// import { HttpMethod } from '@modules/messages/message.type';
 @Injectable()
 export class MessagesRepo {
     constructor(
