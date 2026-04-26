@@ -53,3 +53,8 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# keys
+*.pem
+*.key
+*.cert

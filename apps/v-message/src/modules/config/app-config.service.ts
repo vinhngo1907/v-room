@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SwaggerConfig } from 'src/types';
+import { KafkaConfig, SwaggerConfig } from 'src/types';
 
 @Injectable()
 export class AppConfigService {
@@ -20,6 +20,27 @@ export class AppConfigService {
     return {
       user: this.configService.get<string>('DOC_USER'),
       pass: this.configService.get<string>('DOC_PASS'),
+    };
+  }
+
+  get kafkaConfig(): KafkaConfig & {
+    analysisGroupId: string;
+    consumerGroupId: string;
+    rawMessTopic: string;
+    analysisMessTopic: string;
+  } {
+    return {
+      uri: this.configService.get<string>('KAFKA_URI'),
+      analysisGroupId: this.configService.get<string>(
+        'KAFKA_ANALYSIS_MESSAGE_GROUP',
+      ),
+      consumerGroupId: this.configService.get<string>(
+        'KAFKA_RAW_MESSAGE_GROUP',
+      ),
+      rawMessTopic: this.configService.get<string>('KAFKA_RAW_MESSAGE_TOPIC'),
+      analysisMessTopic: this.configService.get<string>(
+        'KAFKA_ANALYSIS_MESSAGE_TOPIC',
+      ),
     };
   }
 }
