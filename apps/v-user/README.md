@@ -1,4 +1,3 @@
-
 ## Microservices for beginners. User service. Nest js. Mongodb. Kafka.
 
 User service provides functionality for users in application. This service contains all users data, gives the ability to register new users, login in the application, receive information about users, and manage status of user - is active or not. I use Nest.js for backend, Mongo database and Kafka as message broker.
@@ -7,7 +6,7 @@ Full code - [link](https://github.com/vinhngo1907/v-room)
 
 ### Whole scheme:
 
-![Containers](../../docs/img/v-containers.png)
+![Containers](../../docs/img/users/users-containers.png)
 
 Short description:
 
@@ -18,7 +17,7 @@ Short description:
 
 ### Scheme of user service:
 
-![Code](../../docs/img/users-code.png)
+![Code](../../docs/img/users/users-code.png)
 
 `main.ts` - initialization of service. I use `swagger` as documentation and REST client for testing of http requests.
 
@@ -64,6 +63,7 @@ bootstrap();
 ```
 
 `app.module.ts` - contains list of modules:
+
 - ConfigModule - provides configuration, from `config/.env.dev` for dev, or environment variables.
 - MongooseModule - Mongoose ODM for database interactions.
 - UsersRepoModule - I put all database requests in one separated module.
@@ -326,12 +326,12 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
 ```
 
 ### Users module
 
 `users.module.ts` - describes the module.
+
 ```typescript
 import { Module } from '@nestjs/common';
 import { UsersHelper } from './users.helper';
@@ -350,6 +350,7 @@ export class UsersModule {}
 ```
 
 `users.controller.ts` - provides REST API for front-end service
+
 ```typescript
 import {
   Controller,
@@ -477,6 +478,7 @@ export class UsersController {
 ```
 
 `users.joi.ts` - provides validation for users.controller
+
 ```typescript
 import * as Joi from 'joi';
 
@@ -514,6 +516,7 @@ export const findByIdsJoi = Joi.object({
 ```
 
 `kafka.controller.ts` - subscribes to the kafka topic and listens to events from toxic and spam services.
+
 ```typescript
 import { ConfigService } from '@nestjs/config';
 import { Kafka, Producer, Consumer, KafkaMessage } from 'kafkajs';
@@ -582,6 +585,7 @@ export class KafkaController implements OnModuleInit, OnModuleDestroy {
 ```
 
 `users.service.ts` - contains domain and application logic for users service. For example I want to block a user if he writes more than 5 toxic or spam messages, `kafka.controller` launches this method for every message from kafka topic, and `users.service` uses `users-repo` to manage user data.
+
 ```typescript
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
@@ -726,6 +730,7 @@ export class UsersService {
 ```
 
 `users.helper.ts` - provides for `users.service` some application functionality, like hash of password.
+
 ```typescript
 import { Injectable } from '@nestjs/common';
 import { pbkdf2, randomBytes } from 'node:crypto';
@@ -776,6 +781,7 @@ export class UsersHelper {
 How to install Mongo from docker:
 
 Download docker container, launch with required properties, and open console:
+
 ```
 docker pull mongo
 docker run -d --name micro-mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=micro_user -e MONGO_INITDB_ROOT_PASSWORD=micro_pwd mongo
@@ -783,6 +789,7 @@ docker exec -it micro-mongo mongosh
 ```
 
 Settings for database and text index:
+
 ```
 use admin
 db.auth('micro_user', 'micro_pwd')
@@ -804,12 +811,14 @@ How to install Kafka from docker:
 
 Download docker-compose from github - https://github.com/tchiotludo/akhq.
 Launch docker-compose:
+
 ```
 docker-compose pull
 docker-compose up -d
 ```
 
 Settings:
+
 ```
 KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
 KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
@@ -822,11 +831,13 @@ npm i --save kafkajs
 ```
 
 Testing
+
 ```
 npm run test
 ```
 
 Docker
+
 ```
 docker build -t igordubinin/micro-user-service .
 docker run -e MONGO_URI=mongodb://micro_user:micro_pwd@192.168.101.6:27017/micro_users -e KAFKA_URI=192.168.101.6:9094 -v ~/Data/Work/video-project/user-service:/home/node/app --name micro-user-service -p 3002:3002 -d igordubinin/micro-user-service

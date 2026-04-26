@@ -3,28 +3,24 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesModule } from './modules/messages/messages.module';
 import { MessagesRepoModule } from './modules/messages-repo/messages-repo.module';
-import { join } from 'path';
+// import { join } from 'path';
+import { AppConfigService } from 'src/modules/config/app-config.service';
+import { AppConfigModule } from 'src/modules/config/app-module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            envFilePath: [
-                // __dirname + '/../config/.env.prod',
-                `config/.env`,
-            ],
-            isGlobal: true,
-        }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: async (configService: ConfigService) => {
-                return { uri: configService.get<string>('MONGO_URI') }
-            },
-        }),
-        MessagesModule,
-        MessagesRepoModule
-    ],
-    controllers: [],
-    providers: [],
+  imports: [
+    AppConfigModule,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [AppConfigService],
+      useFactory: async (configService: AppConfigService) => {
+        return { uri: configService.mongoUrl };
+      },
+    }),
+    MessagesModule,
+    MessagesRepoModule,
+  ],
+  controllers: [],
+  providers: [ConfigService],
 })
-export class AppModule { }
+export class AppModule {}

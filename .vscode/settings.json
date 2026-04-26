@@ -2,12 +2,11 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.validate": [
-    "typescript"
-  ],
+  "eslint.validate": ["typescript"],
   "eslint.workingDirectories": [
     {
       "mode": "auto"
@@ -17,4 +16,5 @@
     "**/dist": true,
     "**/node_modules": true
   },
+  "git.ignoreLimitWarning": true
 }

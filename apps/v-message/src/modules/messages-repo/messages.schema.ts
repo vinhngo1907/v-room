@@ -1,6 +1,6 @@
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument } from 'mongoose';
 import { messageAnalysisDto } from '@libs/v-dto';
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export type MessageDocument = HydratedDocument<Message>;
 
 @Schema()
@@ -22,8 +22,6 @@ export class Message {
 
   @Prop({ type: Object })
   analysis?: messageAnalysisDto;
-
-
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
