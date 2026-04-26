@@ -37,15 +37,15 @@ I want to create a message system, which events may happen there?
 
 As a user I want to create my account in the system and login there. In the success case I want to see a success notification, in the error case I want to see an error message.
 
-![Login action](./img/events-login.png)
+![Login action](./docs/img/gw/events-login.png)
 
 As a user I want to chat with another user. In the success case I will see our dialog, in the error case, I am not sure what should happen, error message or redirection. Should a system notify a second participant or not?
 
-![Chat join action](./img/events-chat.png)
+![Chat join action](./docs/img/gw/events-chat.png)
 
 As a user I want to send a message into chat. In the success case I will see my message. System should send the message to the second participant. As a service owner I want to feel a friendly atmosphere. I want to avoid spam and toxic messages. Message service will send messages into AI services to analyze spam and toxicity.
 
-![Send message action](./img/events-message.png)
+![Send message action](./docs/img/gw/events-message.png)
 
 From these events I'm selecting several services:
 
@@ -56,7 +56,7 @@ From these events I'm selecting several services:
 - Toxic service - toxic detection.
 - API Gateway - service provide single entry point for all clients.
 
-![Microservices](./img/api-gateway-context.png)
+![Microservices](./docs/img/gw/api-gateway-context.png)
 
 Short description:
 
