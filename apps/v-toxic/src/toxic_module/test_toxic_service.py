@@ -10,46 +10,11 @@ toxic_quotes = [
     "I'm going to kill you, Harry Potter. I'm going to destroy you.",
 ]
 toxic_quotes_predictions = [
-    {
-        "toxic": True,
-        "severe_toxic": False,
-        "obscene": True,
-        "threat": False,
-        "insult": True,
-        "identity_hate": False,
-    },
-    {
-        "toxic": True,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
-    {
-        "toxic": True,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
-    {
-        "toxic": True,
-        "severe_toxic": False,
-        "obscene": True,
-        "threat": False,
-        "insult": True,
-        "identity_hate": False,
-    },
-    {
-        "toxic": True,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
+    {'toxic': True, 'severe_toxic': False, 'obscene': True, 'threat': False, 'insult': True, 'identity_hate': False},
+    {'toxic': True, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
+    {'toxic': True, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
+    {'toxic': True, 'severe_toxic': False, 'obscene': True, 'threat': False, 'insult': True, 'identity_hate': False},
+    {'toxic': True, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
 ]
 
 not_toxic_quotes = [
@@ -60,48 +25,12 @@ not_toxic_quotes = [
     "It is not our abilities that show what we truly are. It is our choices.",
 ]
 not_toxic_quotes_predictions = [
-    {
-        "toxic": False,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
-    {
-        "toxic": False,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
-    {
-        "toxic": False,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
-    {
-        "toxic": False,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
-    {
-        "toxic": False,
-        "severe_toxic": False,
-        "obscene": False,
-        "threat": False,
-        "insult": False,
-        "identity_hate": False,
-    },
+    {'toxic': False, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
+    {'toxic': False, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
+    {'toxic': False, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
+    {'toxic': False, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
+    {'toxic': False, 'severe_toxic': False, 'obscene': False, 'threat': False, 'insult': False, 'identity_hate': False},
 ]
-
 
 class Testing(unittest.TestCase):
     def setUp(self):
@@ -110,17 +39,14 @@ class Testing(unittest.TestCase):
     def test_toxic(self):
         for i in range(len(toxic_quotes)):
             prediction = self.toxic_service_instance.is_toxic(toxic_quotes[i])
-            self.assertTrue(prediction["is_toxic"])
-            self.assertDictEqual(prediction["prediction"], toxic_quotes_predictions[i])
+            self.assertTrue(prediction['is_toxic'])
+            self.assertDictEqual(prediction['prediction'], toxic_quotes_predictions[i])
 
     def test_not_toxic(self):
         for i in range(len(not_toxic_quotes)):
             prediction = self.toxic_service_instance.is_toxic(not_toxic_quotes[i])
-            self.assertFalse(prediction["is_toxic"])
-            self.assertDictEqual(
-                prediction["prediction"], not_toxic_quotes_predictions[i]
-            )
+            self.assertFalse(prediction['is_toxic'])
+            self.assertDictEqual(prediction['prediction'], not_toxic_quotes_predictions[i])
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

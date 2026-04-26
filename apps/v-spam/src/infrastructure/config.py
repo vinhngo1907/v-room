@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, "../../"))
-# print(">>>>>> ",[BASE_DIR])
+
 def getConfig():
     config = {
         # **dotenv_values("./config/.env"),  # load shared development variables

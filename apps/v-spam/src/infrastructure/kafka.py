@@ -1,7 +1,7 @@
 import json
+import ssl
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
-import ssl
 
 def getKafkaConsumer(config):
     ssl_context = ssl.create_default_context(

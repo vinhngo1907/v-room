@@ -1,12 +1,6 @@
 from infrastructure.config import getConfig
 from toxic_module.toxic_service import ToxicService
 from infrastructure.kafka import getKafkaConsumer, getKafkaProducer
-import six
-import sys
-
-if sys.version_info >= (3, 12, 0):
-    sys.modules["kafka.vendor.six.moves"] = six.moves
-
 
 def main():
     config = getConfig()
@@ -14,23 +8,25 @@ def main():
     producer = getKafkaProducer(config)
     toxic_service = ToxicService()
 
-    print("toxic-service started")
+    print('toxic-service started')
 
     for message in consumer:
         try:
-            if not message.value.get("message"):
+            if not message.value.get('message'):
                 continue
-            prediction = toxic_service.is_toxic(message.value.get("message"))
-            if prediction["is_toxic"]:
+
+            prediction = toxic_service.is_toxic(message.value.get('message'))
+            if prediction['is_toxic']:
                 response = {
-                    "id": message.value.get("id"),
-                    "user_id": message.value.get("user_id"),
-                    "analysis": prediction["prediction"],
+                    'id': message.value.get('id'),
+                    'user_id': message.value.get('user_id'),
+                    'analysis': prediction['prediction']
                 }
-                producer.send(config["KAFKA_ANALYSIS_MESSAGE_TOPIC"], response)
+                producer.send(config['KAFKA_ANALYSIS_MESSAGE_TOPIC'], response)
+
         except Exception as error:
-            print("error", error)
+            print('error', error)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
